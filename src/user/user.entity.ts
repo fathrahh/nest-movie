@@ -1,14 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  BeforeInsert,
+  OneToMany,
+} from 'typeorm';
 import { IsEmail } from 'class-validator';
 import * as bcrypt from 'bcrypt';
+import { ProfileEntity } from './profile/profile.entity';
 // import { ArticleEntity } from '../article/article.entity';
 
 @Entity('user')
 export class UserEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Column()
@@ -16,20 +23,17 @@ export class UserEntity {
   email: string;
 
   @Column({ default: '' })
-  image: string;
+  avatar: string;
 
   @Column()
   password: string;
 
-  @BeforeInsert()
-  async hashPassword() {
-    this.password = await bcrypt.hash(this.password, 'yaya');
-  }
+  @Column({ default: false })
+  verified: boolean;
 
-  //   @ManyToMany((type) => ArticleEntity)
-  //   @JoinTable()
-  //   favorites: ArticleEntity[];
+  @Column({ nullable: true })
+  subscribe: number;
 
-  //   @OneToMany((type) => ArticleEntity, (article) => article.author)
-  //   articles: ArticleEntity[];
+  @OneToMany((type) => ProfileEntity, (profile) => profile.id)
+  profiles: ProfileEntity[];
 }

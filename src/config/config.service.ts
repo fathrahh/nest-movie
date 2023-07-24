@@ -42,13 +42,13 @@ export class ConfigService {
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DATABASE'),
 
-      entities: ['**/*.entity{.ts,.js}'],
+      entities: [__dirname + './../**/*.entity{.ts,.js}'],
 
-      migrationsTableName: 'migration',
+      migrationsTableName: 'migrations',
       migrations: ['src/migration/*.ts'],
-
       ssl: this.isProduction(),
-      synchronize: this.isProduction(),
+      synchronize: !this.isProduction(),
+      logging: !this.isProduction(),
     };
   }
 }

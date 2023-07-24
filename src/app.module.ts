@@ -1,19 +1,23 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+
 import { AppController } from './app.controller';
 import { MailModule } from './mail/mail.module';
 import { configService } from './config/config.service';
-import { UserEntity } from './user/user.entity';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       ...configService.getTypeOrmConfig(),
-      entities: [UserEntity],
+      autoLoadEntities: true,
     }),
     MailModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor(private dataSource: DataSource) {}
+}
